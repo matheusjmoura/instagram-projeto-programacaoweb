@@ -17,3 +17,48 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
 }
+
+/*Estilização do wrapper (faz o papel de um container pro body)*/
+#wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 2rem;
+}
+
+#wrapper > .container {
+  display: flex;
+  padding: 0 8rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 93.5rem;
+  margin: 3rem auto 0;
+}
+
+/*Estilização do smartphone de demonstração*/
+.smartphone-demonstracao {
+  background-image: url(https://www.instagram.com/static/images/homepage/home-phones.png/43cc71bb1b43.png);
+  height: 61.8rem;
+  width: 45.4rem;
+  margin-left: -3.3rem;
+  margin-top: 3.35rem;
+}
+
+.smartphone-demonstracao img {
+  position: relative;
+  top: 98px;
+  right: -149px;
+  height: 43.2rem;
+  width: 24.3rem;
+}
+
+/*Estilização da imagem interna do smartphone de demonstração*/
+img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+}
