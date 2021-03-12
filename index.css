@@ -259,3 +259,24 @@ footer .container {
   text-align: center;
   margin-top: 2rem;
 }
+
+
+/*Estilizaçao responsividade*/
+@media (max-width: 450px) {
+  #wrapper {
+    padding-top: 0;
+  }
+  .form-data form {
+    background-color: transparent;
+    border: none;
+    padding: 0 2rem;
+  }
+  .sign-up {
+    background-color: transparent;
+    border: none;
+    margin: 4rem 0;
+  }
+  footer {
+    padding-bottom: 2rem;
+  }
+}
