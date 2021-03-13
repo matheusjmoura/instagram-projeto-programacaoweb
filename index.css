@@ -260,22 +260,51 @@ footer .container {
   margin-top: 2rem;
 }
 
-
 /*Estilizaçao responsividade*/
+@media (max-width: 875px) {
+  .smartphone-demonstracao {
+    display: none;
+  }
+
+  .form-login {
+    margin: 0 auto;
+  }
+
+  #wrapper > .container {
+    padding: 0;
+  }
+
+  footer .container {
+    padding: 0 2rem;
+    justify-content: center;
+  }
+
+  .footer-navegacao ul {
+    justify-content: center;
+  }
+
+  .footer-navegacao ul li {
+    margin-bottom: 1rem;
+  }
+}
+
 @media (max-width: 450px) {
   #wrapper {
     padding-top: 0;
   }
-  .form-data form {
+
+  .form-login form {
     background-color: transparent;
     border: none;
     padding: 0 2rem;
   }
-  .sign-up {
+
+  .cadastre-se {
     background-color: transparent;
     border: none;
     margin: 4rem 0;
   }
+
   footer {
     padding-bottom: 2rem;
   }
