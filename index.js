@@ -24,10 +24,11 @@ function preventFormSubmit() {
   formLogin.addEventListener('submit', handleFormSubmit);
 }
 
+function reload() {
+  document.location.reload(true);
+}
+
 function login() {
-  function reload() {
-    document.location.reload(true);
-  }
   function formCadastro() {
     const botaoCadastro = botaoEntrar.cloneNode(true);
     botaoCadastro.setAttribute('id', 'formCadastrarBotao');
@@ -141,6 +142,9 @@ function randomUser() {
   formLogin.insertBefore(botaoConsultar, inputSenha);
   inputLogin.placeholder = 'Digite sua pesquisa';
   inputSenha.style.visibility = 'hidden';
+  document.querySelector('.cadastre-se').innerHTML =
+    'Deseja finalizar a sessão? <a id="logout" href="#">Sair</a>';
+  document.getElementById('logout').addEventListener('click', reload);
   botaoConsultar.addEventListener('click', getUser);
 }
 
