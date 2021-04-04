@@ -56,31 +56,47 @@ body {
   width: 24.3rem;
 }
 
+.smartphone-result-text {
+  background-color: transparent;
+  font-size: 2rem;
+  top: 1.7rem;
+  height: 38.2rem;
+  width: 24.3rem;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  text-align: center;
+}
+
 .smartphone-result {
+  background-image: url('./images/layout.jpeg');
+  background-size: contain;
   background-color: #fafafa;
   position: relative;
   top: 97.2px;
   right: -43.9px;
   height: 43.2rem;
   width: 24.3rem;
-  overflow-y: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
-.smartphone-result::-webkit-scrollbar {
+.smartphone-result-text::-webkit-scrollbar {
   display: none;
 }
 
 .smartphone-result li {
   margin: 1rem;
   font-size: 1.5rem;
-  /* list-style-type: decimal-leading-zero; */
+  text-align: left;
+  list-style-type: none;
+  color: black;
 }
 
-li.error {
-  list-style-type: none;
+h1.error {
   color: red;
+}
+
+h1.success {
+  color: blue;
 }
 
 /*Estilização da imagem interna do smartphone de demonstração*/
