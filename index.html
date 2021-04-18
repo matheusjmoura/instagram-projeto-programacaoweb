@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+
     <link rel="stylesheet" href="index.css" />
     <link
       rel="icon"
@@ -25,11 +28,14 @@
               <h1></h1>
             </div>
             <input
+              id="inputLogin"
               type="text"
               placeholder="Telefone, nome de usuário ou email"
             />
-            <input type="text" placeholder="Senha" />
-            <button class="form-login-botao" type="submit">Entrar</button>
+            <input id="inputSenha" type="text" placeholder="Senha" />
+            <button id="formLoginBotao" class="form-login-botao" type="submit">
+              Entrar
+            </button>
             <span class="separador">OU</span>
             <a href="#" class="entrar-com-facebook">
               <span class="facebookLogotipo"></span>
@@ -38,19 +44,29 @@
             <a class="esqueceu-senha" href="#">Esqueceu a senha?</a>
           </form>
           <div class="cadastre-se">
-            Não tem uma conta? <a href="#">Cadastre-se</a>
+            Não tem uma conta? <a id="cadastreSe" href="#">Cadastre-se</a>
           </div>
           <div class="obtenha-aplicativo">
             <span>Obtenha o aplicativo.</span>
             <div class="app-store-google-play">
-              <img
-                src="https://www.instagram.com/static/images/appstore-install-badges/badge_ios_portuguese-brazilian-pt_br.png/68006a2bb372.png"
-                alt="app-store"
-              />
-              <img
-                src="https://www.instagram.com/static/images/appstore-install-badges/badge_android_portuguese_brazilian-pt_BR.png/2f2a0c05b2f3.png"
-                alt="google-play"
-              />
+              <a
+                href="https://apps.apple.com/br/app/instagram/id389801252"
+                target="_blank"
+              >
+                <img
+                  src="https://www.instagram.com/static/images/appstore-install-badges/badge_ios_portuguese-brazilian-pt_br.png/68006a2bb372.png"
+                  alt="app-store"
+                />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.instagram.android&hl=pt_BR&gl=US"
+                target="_blank"
+              >
+                <img
+                  src="https://www.instagram.com/static/images/appstore-install-badges/badge_android_portuguese_brazilian-pt_BR.png/2f2a0c05b2f3.png"
+                  alt="google-play"
+                />
+              </a>
             </div>
           </div>
         </div>
