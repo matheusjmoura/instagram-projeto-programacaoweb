@@ -5,6 +5,12 @@ let inputLogin = null;
 let inputSenha = null;
 let botaoEntrar = null;
 let botaoCadastrar = null;
+let divFilters = null;
+let inputName = null;
+let inputDOB = null;
+let inputNat = null;
+let inputGender = null;
+let botaoConsultar = null;
 let token = null;
 
 function start() {
@@ -71,10 +77,8 @@ async function postCadastro() {
   if (validarCampos()) {
     try {
       const response = await axios.post('https://reqres.in/api/register', {
-        email: 'eve.holt@reqres.in',
-        password: 'pistol',
-        // email: inputLogin.value,
-        // password: inputSenha.value,
+        email: inputLogin.value,
+        password: inputSenha.value,
       });
       showResults([
         'sucesso',
@@ -97,10 +101,10 @@ async function postLogin() {
   if (validarCampos()) {
     try {
       const response = await axios.post('https://reqres.in/api/login', {
-        email: 'eve.holt@reqres.in',
-        password: 'cityslicka',
-        // email: inputLogin.value,
-        // password: inputSenha.value,
+        // email: 'eve.holt@reqres.in',
+        // password: 'cityslicka',
+        email: inputLogin.value,
+        password: inputSenha.value,
       });
       showResults([
         'sucesso',
@@ -134,18 +138,123 @@ function clearSuccess() {
   document.querySelector('.esqueceu-senha').remove();
 }
 
+function createFiltes() {
+  inputName = inputLogin.cloneNode(true);
+  inputName.setAttribute('id', 'inputName');
+  inputName.placeholder = 'Digite o primeiro nome';
+  inputName.classList.add('filter');
+  inputName.value = null;
+
+  inputDOB = inputLogin.cloneNode(true);
+  inputDOB.setAttribute('id', 'inputDOB');
+  inputDOB.placeholder = 'Digite a data de nascimento';
+  inputDOB.value = null;
+  inputDOB.setAttribute('type', 'date');
+  inputDOB.addEventListener('blur', () => {
+    inputDOB.setAttribute('type', 'text');
+  });
+  inputDOB.addEventListener('focus', () => {
+    inputDOB.setAttribute('type', 'date');
+  });
+  inputDOB.classList.add('filter');
+
+  inputNat = document.createElement('select');
+  inputNat.setAttribute('id', 'inputNat');
+  inputNat.classList.add('filter');
+  inputNat.innerHTML = `
+  <option value=null>Selecione a nacionalidade</option>
+  <option value="AU">AU</option>
+  <option value="BR">BR</option>
+  <option value="CA">CA</option>
+  <option value="CH">CH</option>
+  <option value="DE">DE</option>
+  <option value="DK">DK</option>
+  <option value="ES">ES</option>
+  <option value="FI">FI</option>
+  <option value="FR">FR</option>
+  <option value="GB">GB</option>
+  <option value="IE">IE</option>
+  <option value="IR">IR</option>
+  <option value="NO">NO</option>
+  <option value="NL">NL</option>
+  <option value="NZ">NZ</option>
+  <option value="TR">TR</option>
+  <option value="US">US</option>`;
+
+  inputGender = document.createElement('select');
+  inputGender.setAttribute('id', 'inputGender');
+  inputGender.classList.add('filter');
+  inputGender.innerHTML = `
+  <option value=null>Selecione o gênero</option>
+  <option value="male">Masculino</option>
+  <option value="female">Feminino</option>`;
+
+  divFilters = document.createElement('div');
+  divFilters.setAttribute('id', 'divFilters');
+  divFilters.classList.add('formFilters');
+
+  divFilters.appendChild(inputNat);
+  divFilters.appendChild(inputGender);
+}
+
 function randomUser() {
-  const botaoConsultar = botaoEntrar.cloneNode(true);
+  createFiltes();
+  botaoConsultar = botaoEntrar.cloneNode(true);
   botaoConsultar.setAttribute('id', 'formConsultarBotao');
   botaoConsultar.textContent = 'Consultar';
   botaoEntrar.remove();
   formLogin.insertBefore(botaoConsultar, inputSenha);
-  inputLogin.placeholder = 'Digite sua pesquisa';
-  inputSenha.style.visibility = 'hidden';
+  inputSenha.remove();
+  inputLogin.remove();
   document.querySelector('.cadastre-se').innerHTML =
     'Deseja finalizar a sessão? <a id="logout" href="#">Sair</a>';
   document.getElementById('logout').addEventListener('click', reload);
   botaoConsultar.addEventListener('click', getUser);
+  formLogin.insertBefore(divFilters, botaoConsultar);
+}
+
+function filterResults(results) {
+  let dataForm = null;
+  if (inputDOB.value) {
+    const data = new Date(inputDOB.value);
+    dataForm =
+      //prettier-ignore
+      (data.getDate() + 1) +
+      '/' +
+      (data.getMonth() + 1) +
+      '/' +
+      data.getFullYear();
+  }
+  if (inputName.value && inputDOB.value) {
+    const filtered = results.filter((res) => {
+      const dataRes = formatData(res.dob.date);
+      return inputName.value === res.name.first && dataRes === dataForm;
+    });
+    !filtered.length && filtered.push('Nenhum resultado encontrado.');
+    showResults(filtered);
+  } else if (inputName.value || inputDOB.value) {
+    const filtered = results.filter((res) => {
+      const dataRes = formatData(res.dob.date);
+      return inputName.value === res.name.first || dataRes === dataForm;
+    });
+    !filtered.length && filtered.push('Nenhum resultado encontrado.');
+    showResults(filtered);
+  } else {
+    showResults(results);
+  }
+}
+
+function filterUsers(results) {
+  const botaoFiltrar = botaoConsultar.cloneNode(true);
+  botaoFiltrar.setAttribute('id', 'formFiltrarBotao');
+  botaoFiltrar.textContent = 'Filtrar';
+  botaoFiltrar.addEventListener('click', () => filterResults(results));
+  formLogin.insertBefore(botaoFiltrar, botaoConsultar);
+  botaoConsultar.remove();
+  divFilters.appendChild(inputName);
+  divFilters.appendChild(inputDOB);
+  inputGender.remove();
+  inputNat.remove();
 }
 
 async function getUser() {
@@ -154,20 +263,27 @@ async function getUser() {
     const response = await axios.get('https://randomuser.me/api/', {
       params: {
         results: 20,
-        nat: inputLogin.value ? inputLogin.value : 'br',
-        gender: inputLogin.value ? inputLogin.value : 'male',
+        nat: inputNat.value ? inputNat.value : null,
+        gender: inputGender.value ? inputGender.value : null,
       },
     });
     response.data.results &&
       response.data.results.forEach((pessoa) => {
         results.push(pessoa);
       });
+    filterUsers(results);
   } catch (error) {
-    results = 'Desculpe, não foi possível realizar essa ação.';
+    results.push('Desculpe, não foi possível realizar essa ação.');
   } finally {
     showResults(results);
-    document.getElementById('inputLogin').focus();
   }
+}
+
+function formatData(dateISO) {
+  const data = new Date(dateISO);
+  return (
+    data.getDate() + '/' + (data.getMonth() + 1) + '/' + data.getFullYear()
+  );
 }
 
 function showResults(results) {
@@ -185,7 +301,12 @@ function showResults(results) {
         i === 0 && (result.innerHTML = 'Resultados');
         const li = document.createElement('li');
         if (res.name) {
-          li.innerHTML = `${res.name.first} ${res.name.last}`;
+          const dataFormatada = formatData(res.dob.date);
+          li.innerHTML = `
+          ${res.name.first} ${res.name.last}
+          <p class="text-result">Nacionalidade: ${res.nat}</p>
+          <p class="text-result">Data de Nascimento: ${dataFormatada}</p>
+          <p class="text-result">Telefone: ${res.phone}</p>`;
           li.style.listStyleImage = `url('${res.picture.thumbnail}')`;
         } else {
           li.innerHTML = res;

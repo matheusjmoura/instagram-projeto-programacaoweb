@@ -68,6 +68,11 @@ body {
   text-align: center;
 }
 
+.text-result {
+  font-weight: normal;
+  font-size: small;
+}
+
 .smartphone-result {
   background-image: url('./images/layout.jpeg');
   background-size: contain;
@@ -176,6 +181,19 @@ h1 {
   border: none;
   border-radius: 0.4rem;
   cursor: pointer;
+}
+
+/*Estilização do form de consulta*/
+.formFilters {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter {
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #eee;
+  border-radius: 0.2rem;
 }
 
 /*Estilização do separador "OU"*/
