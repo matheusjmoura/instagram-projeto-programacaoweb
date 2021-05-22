@@ -75,52 +75,48 @@ function validarCampos() {
 
 async function postCadastro() {
   if (validarCampos()) {
-    try {
-      const response = await axios.post('https://reqres.in/api/register', {
-        email: inputLogin.value,
-        password: inputSenha.value,
-      });
+    const response = await axios.post('/api/usuarios', {
+      email: inputLogin.value,
+      senha: inputSenha.value,
+    });
+    if (response.data.message !== 'CADASTRADO') {
       showResults([
         'sucesso',
         `Usuário ${inputLogin.value} cadastrado com sucesso.`,
       ]);
       token = response.data.token;
-      randomUser();
+      await randomUser();
       clearSuccess();
-    } catch (error) {
+    } else {
       clear();
-      showResults(['erro', 'Erro ao cadastrar usuário.']);
+      showResults(['erro', 'Usuário já cadastrado.']);
       inputLogin.classList.add('erroLogin');
-    } finally {
-      inputLogin.focus();
     }
+    inputLogin.focus();
   }
 }
 
 async function postLogin() {
   if (validarCampos()) {
-    try {
-      const response = await axios.post('https://reqres.in/api/login', {
-        // email: 'eve.holt@reqres.in',
-        // password: 'cityslicka',
-        email: inputLogin.value,
-        password: inputSenha.value,
-      });
+    const response = await axios.post('/api/usuarios/login', {
+      email: inputLogin.value,
+      senha: inputSenha.value,
+    });
+    if (response.data.message !== 'INCORRETO') {
       showResults([
         'sucesso',
         `Usuário ${inputLogin.value} logado com sucesso.`,
       ]);
       token = response.data.token;
-      randomUser();
+      await randomUser();
       clearSuccess();
-    } catch (error) {
+    } else {
       clear();
       showResults(['erro', 'Usuário e/ou senha incorretos.']);
       inputLogin.classList.add('erroLogin');
-    } finally {
-      clear();
-      inputLogin.focus();
     }
+    clear();
+    inputLogin.focus();
   }
 }
 
@@ -138,7 +134,7 @@ function clearSuccess() {
   document.querySelector('.esqueceu-senha').remove();
 }
 
-function createFiltes() {
+async function createFiltes() {
   inputName = inputLogin.cloneNode(true);
   inputName.setAttribute('id', 'inputName');
   inputName.placeholder = 'Digite o primeiro nome';
@@ -161,31 +157,23 @@ function createFiltes() {
   inputNat = document.createElement('select');
   inputNat.setAttribute('id', 'inputNat');
   inputNat.classList.add('filter');
-  inputNat.innerHTML = `
-  <option value=null>Selecione a nacionalidade</option>
-  <option value="AU">AU</option>
-  <option value="BR">BR</option>
-  <option value="CA">CA</option>
-  <option value="CH">CH</option>
-  <option value="DE">DE</option>
-  <option value="DK">DK</option>
-  <option value="ES">ES</option>
-  <option value="FI">FI</option>
-  <option value="FR">FR</option>
-  <option value="GB">GB</option>
-  <option value="IE">IE</option>
-  <option value="IR">IR</option>
-  <option value="NO">NO</option>
-  <option value="NL">NL</option>
-  <option value="NZ">NZ</option>
-  <option value="TR">TR</option>
-  <option value="US">US</option>`;
+  option = document.createElement('option');
+  option.setAttribute('value', '');
+  option.textContent = 'Selecione a nacionalidade';
+  inputNat.appendChild(option);
+  const response = await axios.get('/api/nacionalidade', {});
+  response.data.forEach((res, index) => {
+    option = document.createElement('option');
+    option.setAttribute('value', res.nat);
+    option.textContent = res.nat;
+    inputNat.appendChild(option);
+  });
 
   inputGender = document.createElement('select');
   inputGender.setAttribute('id', 'inputGender');
   inputGender.classList.add('filter');
   inputGender.innerHTML = `
-  <option value=null>Selecione o gênero</option>
+  <option value="">Selecione o gênero</option>
   <option value="male">Masculino</option>
   <option value="female">Feminino</option>`;
 
@@ -197,8 +185,8 @@ function createFiltes() {
   divFilters.appendChild(inputGender);
 }
 
-function randomUser() {
-  createFiltes();
+async function randomUser() {
+  await createFiltes();
   botaoConsultar = botaoEntrar.cloneNode(true);
   botaoConsultar.setAttribute('id', 'formConsultarBotao');
   botaoConsultar.textContent = 'Consultar';
@@ -227,15 +215,15 @@ function filterResults(results) {
   }
   if (inputName.value && inputDOB.value) {
     const filtered = results.filter((res) => {
-      const dataRes = formatData(res.dob.date);
-      return inputName.value === res.name.first && dataRes === dataForm;
+      const dataRes = formatData(res.dob_date);
+      return inputName.value === res.name_first && dataRes === dataForm;
     });
     !filtered.length && filtered.push('Nenhum resultado encontrado.');
     showResults(filtered);
   } else if (inputName.value || inputDOB.value) {
     const filtered = results.filter((res) => {
-      const dataRes = formatData(res.dob.date);
-      return inputName.value === res.name.first || dataRes === dataForm;
+      const dataRes = formatData(res.dob_date);
+      return inputName.value === res.name_first || dataRes === dataForm;
     });
     !filtered.length && filtered.push('Nenhum resultado encontrado.');
     showResults(filtered);
@@ -260,15 +248,14 @@ function filterUsers(results) {
 async function getUser() {
   let results = [];
   try {
-    const response = await axios.get('https://randomuser.me/api/', {
+    const response = await axios.get('/api/pessoas/find', {
       params: {
-        results: 20,
-        nat: inputNat.value ? inputNat.value : null,
-        gender: inputGender.value ? inputGender.value : null,
+        nat: inputNat.value !== '' ? inputNat.value : undefined,
+        gender: inputGender.value !== '' ? inputGender.value : undefined,
       },
     });
-    response.data.results &&
-      response.data.results.forEach((pessoa) => {
+    response.data &&
+      response.data.forEach((pessoa) => {
         results.push(pessoa);
       });
     filterUsers(results);
@@ -300,14 +287,14 @@ function showResults(results) {
     ? results.forEach((res, i) => {
         i === 0 && (result.innerHTML = 'Resultados');
         const li = document.createElement('li');
-        if (res.name) {
-          const dataFormatada = formatData(res.dob.date);
+        if (res.name_first) {
+          const dataFormatada = formatData(res.dob_date);
           li.innerHTML = `
-          ${res.name.first} ${res.name.last}
+          ${res.name_first} ${res.name_last}
           <p class="text-result">Nacionalidade: ${res.nat}</p>
           <p class="text-result">Data de Nascimento: ${dataFormatada}</p>
           <p class="text-result">Telefone: ${res.phone}</p>`;
-          li.style.listStyleImage = `url('${res.picture.thumbnail}')`;
+          li.style.listStyleImage = `url('${res.picture_thumbnail}')`;
         } else {
           li.innerHTML = res;
         }
