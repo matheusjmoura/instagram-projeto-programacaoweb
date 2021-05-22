@@ -4,6 +4,7 @@ AS34A - Programação Web - N14
 
 - Projeto 1 (HTML e CSS)
 - Projeto 2 (JavaScript e AJAX)
+- Projeto 3 (Express.js)
 
 ## Descrição
 
@@ -31,6 +32,14 @@ Para um novo cadastro utilize:
 | EMAIL | SENHA |
 | ------------------ | ---------- |
 | eve.holt@reqres.in | pistol |
+
+### Projeto 3
+
+Consiste da implementação de funcionalidade do lado servidor da aplicação web,
+utilizando a plataforma Node.js. Foi também implementado o lado cliente da aplicação 
+e essa aplicação foi integrada ao servidor.
+
+Para fazer login poderá ser realizado um novo cadastro de usuário.
 
 ## Discentes
 
