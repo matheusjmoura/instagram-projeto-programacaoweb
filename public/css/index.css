@@ -74,7 +74,7 @@ body {
 }
 
 .smartphone-result {
-  background-image: url('./images/layout.jpeg');
+  background-image: url('/images/layout.jpeg');
   background-size: contain;
   background-color: #fafafa;
   position: relative;
