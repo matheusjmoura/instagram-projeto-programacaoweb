@@ -39,7 +39,11 @@ Consiste da implementação de funcionalidade do lado servidor da aplicação we
 utilizando a plataforma Node.js. Foi também implementado o lado cliente da aplicação 
 e essa aplicação foi integrada ao servidor.
 
-Para fazer login poderá ser realizado um novo cadastro de usuário.
+Para fazer login poderá ser realizado um novo cadastro de usuário, e então as
+credenciais cadastradas poderão ser usadas novamente.
+
+<h3><b>Para fazer uma nova consulta de usuários, deverá ser feito o logout,
+e então realizar o login novamente.</b></h3>
 
 ## Discentes
 
